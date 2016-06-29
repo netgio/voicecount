@@ -111,6 +111,27 @@ document.addEventListener('DOMContentLoaded', function() {
    
   </script>
 
+  <style>
+  #jar {
+      position:relative;
+      text-align:center;
+      float: left;
+      margin: 0 auto;
+  }
+
+  #jartext {
+      left: 50%;
+      position:absolute;
+      font-size: 3.2vw;
+      top: 50%;
+      transform: translateY(-50%) translateX(-50%);
+  }
+  
+  #IoT {
+      font-size: 10vw;
+  }
+  </style>
+
   <body>
 
     <!-- Static navbar -->
@@ -131,12 +152,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <div class="container">
       <div class="row">
-        <div class="col-xs-12 col-sm-12"><button type="button" class="btn btn-lg btn-success btn-block">IOT : <span id="IoT"></span></button></div>
+        <div class="col-xs-12 col-sm-12" id="jar">
+              <img src="img/jar.png" width="30%" alt="" />
+              <span id="jartext">Gary's IoT<br/>Swear Jar<br/><span id="IoT">0</span></span>
+        </div>
       </div>
       <div class="row">
-        <div class="col-xs-4 col-sm-4"><button type="button" class="btn btn-default btn-block">Tech Terms : <span id="Tech"></span></button></div>
-        <div class="col-xs-4 col-sm-4"><button type="button" class="btn btn-default btn-block">Analyst Fluff: <span id="Analyst"></span></button></div>
-        <div class="col-xs-4 col-sm-4"><button type="button" class="btn btn-default btn-block">Gartner Stuff: <span id="Gartner"></span></button></div>
+        <div class="col-xs-12 col-sm-4"><button type="button" class="btn btn-default btn-block">Tech Terms : <span id="Tech"></span></button></div>
+        <div class="col-xs-12 col-sm-4"><button type="button" class="btn btn-default btn-block">Analyst Fluff: <span id="Analyst"></span></button></div>
+        <div class="col-xs-12 col-sm-4"><button type="button" class="btn btn-default btn-block">Gartner Stuff: <span id="Gartner"></span></button></div>
       </div>
       <div class="row">
         <div class="col-xs-12"> 
