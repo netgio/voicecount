@@ -1,0 +1,64 @@
+set audio output to jack in raspi-config
+test playback with 
+aplay /usr/share/scratch/Media/Sounds/Animal/WolfHowl.wav 
+
+/// clone the speakpython repo
+git clone https://bitbucket.org/matthew3/speakpython
+
+// setup antlr
+cd speakpython/antlr-3.4/runtime/Python
+sudo python setup.py install
+
+// make sure we have the apt sources set up - will get 404 file not found errors
+// without this.
+sudo apt-get update 
+
+// install missing gstreamer dependencies (needed for pocketshpinx build (otherwise the gst plugin is not built)
+sudo apt-get install gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libasound2-dev
+
+// install autoconf to allow config scripts to work
+sudo apt-get install autoconf libtool bison python-dev swig make
+
+/// default the environment variables 
+sudo nano /etc/profile.d/environment.sh
+
+export LD_LIBRARY_PATH=/usr/local/lib
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+export GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0
+
+cd ~/speakpython
+git clone https://github.com/cmusphinx/pocketsphinx
+git clone https://github.com/cmusphinx/sphinxbase
+
+cd sphinxbase
+./autogen.sh
+./configure 
+make
+make install
+
+cd ../pocketsphinx
+./autogen.sh
+./configure
+make clean all
+make check
+sudo make install
+
+sudo pip install pocketsphinx
+
+sudo pip install websocket-client
+
+sudo apt-get install npm
+
+## pull in code from the repo
+git clone https://github.com/netgio/voicecount
+cd voicecount/ux
+npm install
+node service.js
+
+test commands:
+pocketsphinx_continuous -inmic yes -adcdev plughw:1,0 -keyphrase "oh mighty computer" -kws_threshold 1e-20
+pocketsphinx_continuous -inmic yes -adcdev plughw:1,0 -kws iotcounter.gram
+
+sudo sh -c "echo 0 > /sys/bus/usb/devices/1-1.5/authorized"
+sudo sh -c "echo 1 > /sys/bus/usb/devices/1-1.5/authorized"
+
