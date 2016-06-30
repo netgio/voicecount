@@ -1,6 +1,12 @@
 #SpeakPython allows developers to add speech recognition support to their Python applications
 #Copyright (C) 2015  Eric Matthews
 
+# Modification to support CMU PocketSphinx keyword search capabilities 
+# This includes supporting changes to the PocketSphinx and GStreamer APIs
+# Functional behaviour has also been changed to use partial match callbacks 
+# to suit my use case. 
+# Modifications Copyright (C) 2016  Gary Olliffe 
+
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by 
 #the Free Software Foundation, either version 3 of the License, or 
@@ -15,15 +21,15 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import pygst;
-import gi;
 #import gobject;
+#import Gst;
+import gi;
 
 gi.require_version("Gst", "1.0");
 from gi.repository import GObject, Gst;
 GObject.threads_init();
 Gst.init(None);
 
-#import Gst;
 import os.path;
 import sys;
 

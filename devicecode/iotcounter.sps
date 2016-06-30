@@ -3,7 +3,7 @@
      0 {'iot'}
 @
 
-[it depends | research | inquiry | enterprise | recommend | recommendation];
+[it depends | research | inquiry | enterprise | recommend | recommendation | analysis];
 @results
      0 {'analyst'}
 @
@@ -22,6 +22,12 @@
 @results
      0 {'reset'}
 @
+
+[quit listening];
+@results
+     0 {'quit'}
+@
+
 
 
 

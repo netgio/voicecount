@@ -38,6 +38,8 @@ jspm_packages
 
 #Sphinx and SpeakPython Generated files.
 *.db
-*.dic
 *.fsg
 *.jsgf
+*.img
+# specifically exclude the dictionary created when building a SpeakPython project.
+iotcounter.dic

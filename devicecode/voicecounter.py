@@ -1,74 +1,87 @@
-from SpeakPython.SpeakPythonRecognizer import SpeakPythonRecognizer;
-import websocket;
+from SpeakPython.SpeakPythonRecognizer import SpeakPythonRecognizer
+import websocket
 
 
-import sys;
+import sys
+import logging
 
-hitcount = 0;
-stop = False;
-ws = None;
-send = False;
+logging.basicConfig(filename='voicecount.log',level=logging.DEBUG)
+
+stop = False
+ws = None
+send = False
 
 def on_message(ws, message):
-    print message;
+    logging.debug('received websocket message:' + message)
+    print message
 
 def on_error(ws, error):
-    global send;
-    send = False;
-    print error;
+    global send
+    send = False
+    logging.error('received websocket error:' + str(error))
+    print error
 
 def on_close(ws):
-    global send;
+    global send
     global stop
-    print "### WS closed ###";
-    send = False;
-    stop = True;
+    print "### WS closed ###"
+    logging.error('closing websocket')
+    send = False
+    stop = True
 	
 
 def count(out_str):
-        global hitcount;
-	global send;
-	print "Detected : %s" % out_str;
+        global hitcount
+	global send
+	global stop
+	logging.info('Detected : %s' % out_str)
 	if not out_str == None:
-                hitcount += 1;
+                if out_str == 'quit':
+			stop = True
+			logging.info('quitting via voice')
 		if send:
-			ws.send('{"word":"%s","count":1}' % out_str);
+			logging.info('sending word to websocket:' + out_str)
+			ws.send('{"word":"%s","count":1}' % out_str)
 	else:
-		print "Couldn't recognize.";
+		logging.info('word not recognised:' + out_str)
 
 def on_open(ws):
-	global stop;
-	global send;
-	send = True;
+	global stop
+	global send
+	send = True
 	try:
-		print "### WS Open ###";
-		send = True;
+		logging.info('websocket opened')
+		ws.send('socket started')
+		send = True
 		while not stop:
-			recog.recognize();
+			logging.info('listening')
+			ws.send('device is listening')
+			recog.recognize()
 	except KeyboardInterrupt:
-		print "Interrupted.";
+		logging.info('Interrupted via keyboard.')
 	finally:
+		logging.info('closing web socket')
+		ws.send('websocket closing')
 		ws.close()
-		print "Finally!";
+		print 'Finally!'
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	#main
-	print "### Starting Main ###";
+	logging.info('### Starting Main ###')
 
-	recog = SpeakPythonRecognizer(count, "iotcounter");
-	recog.setDebug(5);
-	print "### Recognizer created ###";
+	recog = SpeakPythonRecognizer(count, 'iotcounter')
+	recog.setDebug(5)
+	logging.info('### Recognizer created ###')
 
-
-	##websocket.enableTrace(True);
-	ws = websocket.WebSocketApp("ws://localhost:3000",
+	##websocket.enableTrace(True)
+	ws = websocket.WebSocketApp('ws://voicecount.azurewebsites.net',
                          	 on_message = on_message,
                                	 on_error = on_error,
-                               	 on_close = on_close);
-	print "### Socket Client Created ###";
-    	ws.on_open = on_open;
-	ws.run_forever();
+                               	 on_close = on_close)
+	logging.info('### Socket Client Created ###')
+    	ws.on_open = on_open
+	ws.run_forever()
 
 	
 

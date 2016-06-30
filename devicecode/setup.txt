@@ -59,6 +59,18 @@ test commands:
 pocketsphinx_continuous -inmic yes -adcdev plughw:1,0 -keyphrase "oh mighty computer" -kws_threshold 1e-20
 pocketsphinx_continuous -inmic yes -adcdev plughw:1,0 -kws iotcounter.gram
 
+/// to reset the USB mic put these two commands in a shell script (see resetusb.sh)
 sudo sh -c "echo 0 > /sys/bus/usb/devices/1-1.5/authorized"
 sudo sh -c "echo 1 > /sys/bus/usb/devices/1-1.5/authorized"
+
+// to run at start up 
+1) update rc.local and make sure that the pi is set to "boot after network"
+2) need to export environment variables 
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+export GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0
+3) Because you cant change working directory in rc.local you have to run a shell script
+to do the actual execution (see voicecounter.sh)
+4) note also, that to test this you should run it from the root folder  (/) with -E to make sure sudo inherits the environmetn
+sudo -E /home/pi/voicecount/voicecounter.py
+
 
