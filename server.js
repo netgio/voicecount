@@ -31,7 +31,7 @@ function handleEvent(data) {
    		wordCount.words[word] = 0;
       wss.broadcast("Counters Reset");
 	  }
-  } else if (wordCount.words[data.word] == null) {
+  } else if (!wordCount.words.hasOwnProperty(data.word)) {
 	  wordCount.words[data.word] = data.count;
   } else {
 	  wordCount.words[data.word] += data.count;
