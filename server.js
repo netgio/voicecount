@@ -49,7 +49,7 @@ wss.on('connection', function connection(ws) {
       var data = JSON.parse(command);
       handleEvent(data);
     }
-    catch {
+    catch (e) {
       wss.broadcast("message:" + command);
     }
 

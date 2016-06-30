@@ -73,7 +73,7 @@ function onMessage(evt) {
   try {
     var status = JSON.parse(evt.data);
     updateStatus(status);
-  } catch {}
+  } catch (e) {}
 }  
 
 function onError(evt) { 
