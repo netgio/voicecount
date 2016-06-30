@@ -29,6 +29,7 @@ function handleEvent(data) {
   if (data.word == "reset") {
   	for(var word in wordCount.words) {
    		wordCount.words[word] = 0;
+      wss.broadcast("Counters Reset");
 	  }
   } else if (wordCount.words[data.word] == null) {
 	  wordCount.words[data.word] = data.count;
