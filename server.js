@@ -29,11 +29,11 @@ function handleEvent(data) {
   if (data.word == "reset") {
   	for(var word in wordCount.words) {
    		wordCount.words[word] = 0;
-	}
+	  }
   } else if (wordCount.words[data.word] == null) {
-	wordCount.words[data.word] = data.count;
+	  wordCount.words[data.word] = data.count;
   } else {
-	wordCount.words[data.word] += data.count;
+	  wordCount.words[data.word] += data.count;
   }
   // send the status to listening clients
   wss.broadcast(JSON.stringify(wordCount));
@@ -44,9 +44,16 @@ function handleEvent(data) {
 // When a Websocket client connects, set up an event handler for received messages (command)
 wss.on('connection', function connection(ws) {
    ws.on('message', function incoming(command) {
-    var data = JSON.parse(command);
+    try {
+      var data = JSON.parse(command);
+      handleEvent(data);
+    }
+    catch {
+      wss.broadcast("message:" + command);
+    }
 
-    handleEvent(data);
+
+    
   });
 });
 

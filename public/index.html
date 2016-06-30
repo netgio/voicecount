@@ -69,9 +69,11 @@ function onClose(evt)
 }  
 
 function onMessage(evt) { 
-  var status = JSON.parse(evt.data);
   writeToLog('<span class="li">Data (' + timestamp() + '): ' + evt.data +'</span>');
-  updateStatus(status);
+  try {
+    var status = JSON.parse(evt.data);
+    updateStatus(status);
+  } catch {}
 }  
 
 function onError(evt) { 
