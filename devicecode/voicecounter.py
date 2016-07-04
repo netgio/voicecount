@@ -58,10 +58,11 @@ def on_open(ws):
 			ws.send('device is listening')
 			recog.recognize()
 	except KeyboardInterrupt:
+		stop = True
 		logging.info('Interrupted via keyboard.')
 	finally:
 		logging.info('closing web socket')
-		ws.send('websocket closing')
+		##ws.send('websocket closing')
 		ws.close()
 		print 'Finally!'
 
@@ -81,7 +82,7 @@ if __name__ == '__main__':
                                	 on_close = on_close)
 	logging.info('### Socket Client Created ###')
     	ws.on_open = on_open
-	ws.run_forever()
-
+	while not stop:
+		ws.run_forever(ping_interval=30, ping_timeout=10)
 	
 
