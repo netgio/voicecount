@@ -85,6 +85,10 @@ function writeToLog(message) {
   pre.className = "list-group-item log"; 
   pre.innerHTML = message; 
   output.insertBefore(pre, output.firstChild);
+  if (output.childNodes.length > 100)
+  {
+     output.lastChild.remove();
+  }
 }  
 
 //Update UI based on status event from websocket

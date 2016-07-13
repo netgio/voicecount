@@ -10,6 +10,7 @@ logging.basicConfig(filename='voicecount.log',level=logging.DEBUG)
 stop = False
 ws = None
 send = False
+exitcode = 0
 
 def on_message(ws, message):
     logging.debug('received websocket message:' + message)
@@ -25,7 +26,7 @@ def on_close(ws):
     global send
     global stop
     print "### WS closed ###"
-    logging.error('closing websocket')
+    logging.info('closing websocket')
     send = False
     stop = True
 	
@@ -34,11 +35,18 @@ def count(out_str):
         global hitcount
 	global send
 	global stop
+	global exitcode
 	logging.info('Detected : %s' % out_str)
 	if not out_str == None:
                 if out_str == 'quit':
 			stop = True
-			logging.info('quitting via voice')
+			exitcode = 0;
+			logging.info('quitting via voice - Exit Code 0')
+		elif out_str == 'restart':
+			stop = True
+			exitcode = 1;
+			logging.info('quitting with Exit Code 1')
+
 		if send:
 			logging.info('sending word to websocket:' + out_str)
 			ws.send('{"word":"%s","count":1}' % out_str)
@@ -48,6 +56,7 @@ def count(out_str):
 def on_open(ws):
 	global stop
 	global send
+	global exitcode
 	send = True
 	try:
 		logging.info('websocket opened')
@@ -60,9 +69,12 @@ def on_open(ws):
 	except KeyboardInterrupt:
 		stop = True
 		logging.info('Interrupted via keyboard.')
+	except : # unexpected exception
+		stop = True
+		exitcode = 1
 	finally:
 		logging.info('closing web socket')
-		##ws.send('websocket closing')
+		ws.send('Disconnecting Websocket')
 		ws.close()
 		print 'Finally!'
 
@@ -84,5 +96,6 @@ if __name__ == '__main__':
     	ws.on_open = on_open
 	while not stop:
 		ws.run_forever(ping_interval=30, ping_timeout=10)
-	
+	logging.info('existing with code ' + str(exitcode))
+	exit(exitcode) # this should run for ever
 
