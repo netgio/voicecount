@@ -81,3 +81,6 @@ configure supervisord.conf to launch the voicecounter.sh file.  This script will
 and then start the voicecounter.py script.  Running it with supervisord allows us to configure automatic restarts
 [note that i have tried modifyin the python program's websocket handling to address this, but without success] 
 
+/etc/supervisor.conf
+
+then update rc.local to start supervisord at boot time.
