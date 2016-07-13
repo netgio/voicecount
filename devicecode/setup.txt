@@ -73,4 +73,11 @@ to do the actual execution (see voicecounter.sh)
 4) note also, that to test this you should run it from the root folder  (/) with -E to make sure sudo inherits the environmetn
 sudo -E /home/pi/voicecount/voicecounter.py
 
+The Python process will die with a "broken pipe" error occasionally. 
+To address this install Supervisord using:
+> sudo pip install supervisord
+
+configure supervisord.conf to launch the voicecounter.sh file.  This script will reset the USB mic
+and then start the voicecounter.py script.  Running it with supervisord allows us to configure automatic restarts
+[note that i have tried modifyin the python program's websocket handling to address this, but without success] 
 
